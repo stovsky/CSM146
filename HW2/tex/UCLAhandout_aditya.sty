@@ -1,0 +1,205 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{dsphomework}[2008/09/08 dsphomework package created by Soheil Mohajer, based on work of Marius
+Kleiner]
+
+\RequirePackage{fullpage}
+\RequirePackage{amsopn}
+
+\usepackage{color}
+
+% General handout header
+\newcommand{\handout}[2]{{\parindent 0pt
+Introduction to Machine Learning CS M146 \hfill UCLA  Spring Quarter 2023\\
+Prof. Aditya Grover \hfill  #1\par
+\vspace{.2cm}%
+}
+\begin{center}
+\hrule\vspace*{10pt}
+{#2}
+\end{center}
+\hrule
+\vspace*{1cm}
+% The following prevents floats from being placed at the top of the page
+% containing the title
+\global\@topnum\z@%
+}
+ 
+% Homework header
+\newcommand{\homeworksheet}[3]{\handout{Handout \# #2, #3}{\Large Homework Set
+\# #1}}
+
+% Solution header
+\newcommand{\homeworksolsheet}[3]{\handout{Handout \# #2, #3}{\Large Solutions:
+Homework Set \# #1}}
+
+% Exercise commands
+\newcounter{problem-num}
+\setcounter{problem-num}{0}
+
+\newcommand{\TODO}[1]{{\color{red} #1}}
+
+\newcommand{\exercise}[1][]{\refstepcounter{problem-num}
+\section*{Problem \arabic{problem-num}%
+\def\addtext{#1}\ifx\addtext\empty\else\ \normalfont\normalsize\textsc{(#1)}\fi}
+}
+\newcommand{\points}[1]{{\textbf{[#1 points]}}}
+\newcommand{\totalpoints}[1]{{\textbf{[#1 points total]}}}
+
+% Set the first level counter to the format (a); so we can simply use the
+% enumerate environment and don't have to explicitely write the (a), (b), etc.
+\renewcommand\theenumi{\@alph\c@enumi}
+\renewcommand\theenumii{\@arabic\c@enumii}
+\renewcommand\labelenumi{(\theenumi)}
+\renewcommand\labelenumii{\theenumii.}
+
+% Algebraic objects
+%------------------
+\DeclareMathOperator{\reals}{\ensuremath{\mathbb{R}}}
+\DeclareMathOperator{\realsplus}{\ensuremath{\mathbb{R}^+}}
+\DeclareMathOperator{\creals}{\ensuremath{\bar{\mathbb{R}}}}
+\DeclareMathOperator{\cR}{\creals}
+\DeclareMathOperator{\crealsplus}{\ensuremath{\bar{\mathbb{R}}^+}}
+\DeclareMathOperator{\cRp}{\crealsplus}
+\DeclareMathOperator{\R}{\reals}
+\DeclareMathOperator{\GF}{GF}
+\DeclareMathOperator{\field}{\ensuremath{\mathbb{F}}}
+\DeclareMathOperator{\F}{\field}
+\DeclareMathOperator{\extensionfield}{\ensuremath{\mathbb{E}}}
+\DeclareMathOperator{\semiring}{\ensuremath{\mathbb{K}}}
+\DeclareMathOperator{\complex}{\ensuremath{\mathbb{C}}}
+\newcommand{\Complex}{{\rm {\bf C}\mkern-9mu\rule{0.05em}{1.4ex}\mkern10mu}}
+\DeclareMathOperator{\integers}{\ensuremath{\mathbb{Z}}}
+\DeclareMathOperator{\naturals}{\ensuremath{\mathbb{N}}}
+\DeclareMathOperator{\rationals}{\ensuremath{\mathbb{Q}}}
+\DeclareMathOperator{\sinc}{\ensuremath{\textrm{sinc}}}
+\DeclareMathOperator{\SComplex}{{\rm {\bf C}\mkern-9mu\rule{0.05em}{1.4ex}\mkern7mu}}
+\DeclareMathOperator{\Gauss}{\eta}
+\DeclareMathOperator{\va}{\vect{a}}
+\DeclareMathOperator{\vb}{\vect{b}}
+\DeclareMathOperator{\vc}{\vect{c}}
+\DeclareMathOperator{\vy}{\vect{y}}
+\DeclareMathOperator{\vz}{\vect{z}}
+\DeclareMathOperator{\vA}{\vect{A}}
+\DeclareMathOperator{\vB}{\vect{B}}
+\DeclareMathOperator{\vC}{\vect{C}}
+\DeclareMathOperator{\vM}{\vect{M}}
+\DeclareMathOperator{\vR}{\vect{R}}
+\DeclareMathOperator{\vY}{\vect{Y}}
+
+
+% Other Stuff
+%------------
+\newcommand{\conv}{\otimes}
+\newcommand{\expectation}{\ensuremath{\mathbb{E}}}
+\newcommand{\Expt}{\expectation}
+\newcommand{\sfield}{\ensuremath{\mathbb{F}}}
+%\newcommand{\probability}{{\mbox{\rm Pr}}}
+\newcommand{\Prob}[1]{{\ensuremath{\mathbb{P}\left[ #1 \right]} }}
+\newcommand{\probability}{\Prob}
+
+%\newcommand{\vect}[1]{\mbox{\boldmath$#1$}}
+\newcommand{\vect}[1]{\ensuremath{{\mathbf#1}}}
+\newcommand{\vct}[1]{\ensuremath{{\mathbf#1}}}
+\newcommand{\decision}[2]{\ensuremath{\overset{#1}{\underset{#2}{\gtrless}}}}
+\newcommand{\half}{\ensuremath{{\textstyle\frac{1}{2}}}}
+\newcommand{\smallfrac}[2]{\ensuremath{{\textstyle\frac{#1}{#2}}}}
+\newcommand{\paren}[1]{\ensuremath{\left(#1\right)}}
+\newcommand{\clparen}[1]{\ensuremath{\left\{#1\right\}}}
+\newcommand{\sqparen}[1]{\ensuremath{\left[#1\right]}}
+
+\def\pth#1{\left(#1\right)}
+\def\bra#1{\left\{#1\right\}}
+\def\sbra#1{\left[#1\right]}
+\def\dbars#1{\left\|#1\right\|}
+\def\bars#1{\left|#1\right|}
+\def\cro#1{\left<#1\right>}
+
+% The MATLAB ``logo'' in sans-serif font
+\newcommand\matlab{{\normalfont\textsf{MATLAB}}}
+
+% MATLAB commands
+\newcommand\mlcmd[1]{{\normalfont\texttt{#1}}}
+\newcommand\stem{\mlcmd{stem}}
+\newcommand\fft{\mlcmd{fft}}
+
+
+\newcommand{\abf}{\mbox{${\bf a }$} }
+\newcommand{\bbf}{\mbox{${\bf b }$} }
+\newcommand{\cbf}{\mbox{${\bf c }$} }
+\newcommand{\dbf}{\mbox{${\bf d }$} }
+\newcommand{\hbf}{\mbox{${\bf h }$} }
+\newcommand{\gbf}{\mbox{${\bf g }$} }
+\newcommand{\nbf}{\mbox{${\bf n }$} }
+\newcommand{\ubf}{\mbox{${\bf u }$} }
+\newcommand{\vbf}{\mbox{${\bf v }$} }
+\newcommand{\wbf}{\mbox{${\bf w }$} }
+\newcommand{\xbf}{\mbox{${\bf x }$} }
+\newcommand{\ybf}{\mbox{${\bf y }$} }
+\newcommand{\zbf}{\mbox{${\bf z }$} }
+
+\newcommand{\norm}[2]{\lVert#1\rVert_{#2}}
+\newcommand{\lonenorm}[1]{\norm{#1}{1}}
+\newcommand{\ltwonorm}[1]{\norm{#1}{2}}
+\newcommand{\matr}[1]{\boldsymbol{#1}}
+
+\newcommand{\m}[1]{\mbox{$#1$}}
+
+\renewcommand{\O}{\mathcal{O}}
+\renewcommand{\P}{\mathcal{P}}
+\newcommand{\No}{\bar{\mathcal{O}}}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\Ng}{\bar{\mathcal{G}}}
+\renewcommand{\ae}{\stackrel{\cdot}{=}}
+\newcommand{\rh}{r_H}
+\newcommand{\rl}{r_L}
+\renewcommand{\dh}{d_H}
+\newcommand{\dl}{d_L}
+\newcommand{\SNR}{{\sf SNR}}
+\newcommand{\SNRh}{{\sf SNR_H}}
+\newcommand{\SNRl}{{\sf SNR_L}}
+%\newcommand{\A}{\mathcal{A}}
+
+
+\newcommand{\E}{\ensuremath{\mathcal{E}}}
+\newcommand{\A}{\ensuremath{\mathcal{A}}}
+\newcommand{\s}{\ensuremath{\sigma}}
+
+
+\newcommand{\key}{\mathcal{K}}
+\newcommand{\msg}{\mathcal{M}}
+
+\def\xor{\oplus}
+
+\newcommand{\Abf}{\mbox{${\bf A }$} }
+\newcommand{\Bbf}{\mbox{${\bf B }$} }
+\newcommand{\Cbf}{\mbox{${\bf C }$} }
+\newcommand{\Dbf}{\mbox{${\bf D }$} }
+\newcommand{\Ebf}{\mbox{${\bf E }$} }
+\newcommand{\Fbf}{\mbox{${\bf F }$} }
+\newcommand{\Gbf}{\mbox{${\bf G }$} }
+\newcommand{\Hbf}{\mbox{${\bf H }$} }
+\newcommand{\Ibf}{\mbox{${\bf I }$} }
+\newcommand{\Kbf}{\mbox{${\bf K }$} }
+\newcommand{\Mbf}{\mbox{${\bf M }$} }
+\newcommand{\Nbf}{\mbox{${\bf N }$} }
+\newcommand{\Pbf}{\mbox{${\bf P }$} }
+\newcommand{\Qbf}{\mbox{${\bf Q }$} }
+\newcommand{\Rbf}{\mbox{${\bf R }$} }
+\newcommand{\Sbf}{\mbox{${\bf S }$} }
+\newcommand{\Ubf}{\mbox{${\bf U }$} }
+\newcommand{\Vbf}{\mbox{${\bf V }$} }
+\newcommand{\Xbf}{\mbox{${\bf X }$} }
+\newcommand{\Ybf}{\mbox{${\bf Y }$} }
+\newcommand{\Zbf}{\mbox{${\bf Z }$} }
+
+\newcommand{\ZZ}{\mathbb Z}
+
+\newcommand{\alphabf}{\mbox{${\boldmath \alpha }$} }
+\newcommand{\betabf}{\mbox{${\boldmath \beta }$} }
+\newcommand{\epsibf}{\mbox{${\boldmath \epsilon }$} }
+\newcommand{\psibf}{\mbox{${\boldmath \psi }$} }
+\newcommand{\xibf}{\mbox{${\boldmath \xi }$} }
+\newcommand{\thetabf}{\mbox{${\boldmath \theta }$} }
+\newcommand{\Thetabf}{\mbox{${\boldmath \Theta }$} }
+\newcommand{\Lambdabf}{\mbox{${\boldmath \Lambda }$} }
+\newcommand{\Zerobf}{\mbox{${\large{\bf 0 }}$} }

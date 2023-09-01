@@ -1,0 +1,250 @@
+\documentclass[11pt]{article}
+
+\usepackage{UCLAhandout_aditya}
+\usepackage{course}
+\input{macros}
+
+
+\usepackage{color,amssymb,stmaryrd,amsmath,amsfonts,rotating,mathrsfs,psfrag}
+
+
+\begin{document}
+
+\handout{10th May 2023}{\Large Homework \#3 \\\small Due: 22nd May 2023, Monday, before 11:59 pm}
+
+\vspace{-0.5in}
+
+\newcommand{\bftheta}{\boldsymbol\theta}
+\newcommand{\bfalpha}{\boldsymbol\alpha}
+
+
+\exercise[Support Vector Machines \problemworth{9}]
+
+Suppose we are looking for a maximum-margin linear classifier \emph{through the origin}, (i.e. bias $b=0$) for the hard margin SVM formulation, (i.e., no slack variables). In other words, 
+\begin{equation*}
+    \min \frac{1}{2}\Vert\vect{w} \Vert^2\ s.t.\  y^{(i)} \vect{w}^T \vect{x}^{(i)} \geq 1, i = 1, \ldots, n.
+\end{equation*}
+
+
+\begin{enumerate}
+
+\item \itemworth{3} Given a single training vector $\vect{x} = (1,1)^T \in \mathbb{R}^2$ with label $y = -1$, what is the $\vect{w}^\ast$ that satisfies the above constrained minimization?
+\vspace{3cm}
+
+\item \itemworth{3} Suppose we have two training examples, $\vect{x}^{(1)} = (1,1)^T \in \mathbb{R}^2$ and $\vect{x}^{(2)} = (1,0)^T \in \mathbb{R}^2$ with labels $y^{(1)} = 1$ and $y^{(2)} = -1$. What is $\vect{w}^\ast$ in this case?
+\vspace{3cm}
+
+\item \itemworth{3} Suppose we now allow the bias $b$ to be non-zero. How would the classifier and the margin change in the previous question? What are $(\vect{w}^\ast, b^\ast)$? Compare your solutions with and without bias.
+\vspace{6cm}
+
+\end{enumerate}
+
+\newpage
+\exercise[Boosting \problemworth{24}]
+  Consider the following examples $(x_1,x_2) \in \mathbb{R}^2$ in Table \ref{table:data_boost} ({\em i} is the example index):
+  \begin{table}[ht]
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+          \hline
+          {\em i}  & $x_1$  & $x_2$ & Label \\
+          \hline
+          {\em 1}  & 0  & 5 & $-$ \\ 
+          \hline
+          {\em 2}  & 1  & 4 & $-$ \\
+          \hline
+          {\em 3}  & 3  & 7 & $+$ \\
+          \hline
+          {\em 4}  & -2  & 1 & $+$ \\ 
+          \hline
+          {\em 5}  & -1  & 13 & $-$ \\
+          \hline
+          {\em 6}  & 10  & 3 & $-$ \\
+          \hline
+          {\em 7}  & 12 & 7 & $+$ \\
+          \hline
+          {\em 8}  & -7  & -1 & $-$ \\
+          \hline
+          {\em 9}  & -3  & 12 & $+$ \\
+          \hline
+          {\em 10} & 5  & 9 & $+$ \\
+          \hline
+        \end{tabular}
+    \end{center}
+    \caption{Dataset for Boosting Problem}\label{table:data_boost}
+  \end{table}
+
+  In this problem, you will use Boosting to learn a hidden Boolean function from this set of examples.
+We will use two rounds of AdaBoost to learn a hypothesis for this
+    data set. In each round, AdaBoost chooses a weak learner that minimizes the error $\epsilon$. As weak learners, use hypotheses of the form (a)~$f_1(x_1, x_2) = \text{sign}(x_1- j_1)$ or (b)~$f_2(x_1, x_2) = \text{sign}(x_2 - j_2)$, for some integers $j_1,j_2$ (pick one of the two forms; do not use a disjunction of the two). Note that values of $j_1, j_2$ may be different for each round of AdaBoost. When using log, use base e.
+
+\begin{table}[h]
+      {\centering
+        \begin{tabular}{|c|c||c|c|c|c||c|c|c|c|}
+
+          \hline
+          & & \multicolumn{4}{c||}{Hypothesis 1 (1st iteration)}
+	  & \multicolumn{4}{c|}{Hypothesis 2 (2nd iteration)} \\
+          \cline{3-10}
+          {\em i} & Label & $\textbf{w}_0$ & $f_1 \equiv $ & $f_2 \equiv $ & $h_1\equiv$ & $\textbf{w}_1$ &  $f'_1 \equiv $ & $f'_2 \equiv $ & $h_2 \equiv $ \\
+          & & & sign($x_1 -$\rule[-2pt]{3mm}{0.2pt}$\;$) & sign($x_2 -$\rule[-2pt]{3mm}{0.2pt}$\;$) & $\;$\rule[-2pt]{1cm}{0.2pt}$\;$ & & sign($x_1 -$\rule[-2pt]{3mm}{0.2pt}$\;$) & sign($x_2 -$\rule[-2pt]{3mm}{0.2pt}$)\;$ & $\;$\rule[-2pt]{1cm}{0.2pt}$\;$ \\
+
+          \tiny{(1)} & \tiny{(2)} & \tiny{(3)} & \tiny{(4)} &  \tiny{(5)} & \tiny{(6)} & \tiny{(7)} & \tiny{(8)} & \tiny{(9)} & \tiny{(10)}\\
+          \hline \hline
+          {\em 1} & $-$ & & & & & & & &  \\
+          \hline
+          {\em 2} & $-$ & & & & & & & &  \\
+          \hline
+          {\em 3} & $+$ & & & & & & & & \\
+          \hline
+          {\em 4} & $+$ & & & & & & & & \\
+          \hline
+          {\em 5} & $-$ & & & & & & & & \\
+          \hline
+          {\em 6} & $-$ & & & & & & & & \\
+          \hline
+          {\em 7} & $+$ & & & & & & & & \\
+          \hline
+          {\em 8} & $-$ & & & & & & & & \\
+          \hline
+          {\em 9} & $+$ & & & & & & & & \\
+          \hline
+          {\em 10} & $+$ & & & & & & & & \\
+          \hline
+        \end{tabular}
+        \caption{Table for Boosting results}\label{table:ltu}}
+    \end{table}
+
+  \begin{enumerate}
+  \item {\bf [6 points]}  Start the first round with a uniform distribution $\textbf{w}_0$, i.e., $w_{0,i} = 0.1$.  Place the value for
+    $\textbf{w}_0$ for each example in the third column of Table~\ref{table:ltu}.
+Pick an appropriate value of $j_1$ for $f_1 = \text{sign}(x_1 - j_1)$, provide the selected value of $j_1$ in the heading to the fourth column of Table~\ref{table:ltu}, and then write down the value of $f_1(x_1, x_2) = \text{sign}(x_1 - j_1)$ for each example in the fourth column. Repeat this process for $j_2$ and $f_2(x_1, x_2) = \text{sign}(x_2 - j_2)$ using the fifth column of Table~\ref{table:ltu}.
+\vspace{3cm}
+
+  \item {\bf [6 points]}
+    Find the candidate hypothesis (i.e., one of $f_1$ or $f_2$) given by the weak learner that minimizes the training error
+    $\epsilon$ for the uniform distribution.  Place this chosen hypothesis as the heading to the
+    sixth column of Table~\ref{table:ltu}, and fill its prediction for each example in that column.
+    \vspace{3cm}
+
+   \item {\bf [6 points]} Now compute $\textbf{w}_1$ for each example using $h_1$, find the new best weak learners $f'_1$ and $f'_2$ given these weights, and select hypothesis $h_2$ that
+    minimizes error on the distribution given by $\textbf{w}_1$, placing the relevant values and
+    predictions in the seventh to tenth columns of Table~\ref{table:ltu} (similar to parts a and b).
+    \vspace{6cm}
+
+  \item {\bf [6 points]} What is the final hypothesis produced by AdaBoost?
+  \vspace{3cm}
+
+\end{enumerate}
+
+\textbf{What to submit:} Fill out Table~\ref{table:ltu} as explained, show computation of  $\textbf{w}_1$, $\beta_1$, $\beta_2$ for the chosen hypothesis at each round, and give the final hypothesis, $H(\textbf{x})$.
+
+\newpage
+\exercise[Twitter analysis using SVM \problemworth{32}]\label{sec:intro}
+
+In this project, you will be working with Twitter data. Specifically, we have supplied you with a number of tweets that are reviews/reactions to movies\footnote{Please note that these data were selected at random and thus the content of these tweets do not reflect the views of the course staff. :-)},
+
+e.g., \textit{``@nickjfrost just saw The Boat That Rocked/Pirate Radio and I thought it was brilliant! You and the rest of the cast were fantastic! $<$ 3''.}
+
+You will learn to automatically classify such tweets as either positive or negative reviews. To do this, you will employ Support Vector Machines (SVMs), a popular choice for a large number of classification problems.
+
+\section*{Starter Files}
+\vspace{-\baselineskip}
+\rule{\textwidth}{1pt}
+Code and Data
+\begin{itemize}[nolistsep]
+    \item \verb|HW3_release.ipynb|. Notebook for the assignment. \footnote{To run the notebook on Google Colab, check the first 3 cells in \verb|HW3_release.ipynb|; otherwise, delete the first 3 cells.}.
+    \item \verb|tweets.txt| contains 630 tweets about movies. Each line in the file contains exactly one tweet, so there are 630 lines in total. The first $560$ tweets will be used for training and the last $70$ tweets will be used for testing.
+    \item \verb|labels.txt| contains the corresponding labels. If a tweet praises or recommends a movie, it is classified as a positive review and labeled $+1$; otherwise it is classified as a negative review and labeled $-1$. These labels are ordered, i.e. the label for the $i^\textrm{th}$ tweet in \verb|tweets.txt| corresponds to the $i^\textrm{th}$ number in \verb|labels.txt|.
+\end{itemize}
+Documentation
+\begin{itemize}[nolistsep]
+\item LinearSVC (linear SVM classifier): \\{\footnotesize \url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html}}
+\item Cross-Validation: \\{\footnotesize \url{https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html}}
+\item Metrics: 
+\\ Accuracy: {\footnotesize \url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html}}
+\\ F1-Score: {\footnotesize \url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html}}
+\\ AUROC: {\footnotesize \url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html}}
+\\ Precision: {\footnotesize \url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_score.html}}
+\\ Specificity (recall): {\footnotesize \url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.recall_score.html}}
+\\ Confusion Matrix: {\footnotesize \url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html}}
+\end{itemize}
+\vspace{-\baselineskip}
+\rule{\textwidth}{1pt}
+
+Skim through the tweets to get a sense of the data and skim through the code to understand its structure.
+
+We use a bag-of-words model to convert each tweet into a feature vector. A bag-of-words model treats a text file as a collection of words, disregarding word order. The first step in building a bag-of-words model involves building a ``dictionary''. A dictionary contains all of the unique words in the text file. For this project, we will be including punctuations in the dictionary too. For example, a text file containing \textit{``John likes movies. Mary likes movies2!!''} will have a dictionary \verb|{`John':0, `Mary':1, `likes':2, `movies':3, `movies2':4, `.':5, `!':6}|. Note that the $\verb|(key,value)|$ pairs are $\verb|(word, index)|$, where the index keeps track of the number of unique words (size of the dictionary).
+
+Given a dictionary containing $d$ unique words, we can transform the $n$ variable-length tweets into $n$ feature vectors of length $d$ (bag of words representation) by setting the $i^\textrm{th}$ element of the $j^\textrm{th}$ feature vector to $1$ if the $i^\textrm{th}$ dictionary word is in the $j^\textrm{th}$ tweet, and $0$ otherwise. We save the feature vectors in a feature matrix, where the rows correspond to tweets (examples) and the columns correspond to words (features).
+
+\section{Hyperparameter Selection for a Linear SVM [22 pts]}\label{sec:linear}
+
+Next, we will learn a classifier to separate the training data into positive and negative tweets. For the classifier, we will use linear SVMs. We will use the \verb|sklearn.svm.LinearSVC| class\footnote{Note that when using SVMs with the linear kernel (linear SVMs), it is recommended to use sklearn.svm.LinearSVC instead of sklearn.svm.SVC because the backbone of sklearn.svm.LinearSVC is the LIBLINEAR library, which is specifically designed for the linear kernel.} and explicitly set the following initialization parameters (and only these initialization parameters): set \verb|loss| to `hinge', \verb|random_state| to 0, and \verb|C| to various values per the instructions. As usual, we will use \verb|LinearSVC.fit(X,y)| to train our SVM, but in lieu of using \verb|LinearSVC.predict(X)| to make predictions, we will use \verb|LinearSVC.decision_function(X)|, which returns a confidence score proportional to the (signed) distance of the samples to the hyperplane.
+
+SVMs have hyperparameters that must be set by the user. We will select the hyperparameters using 5-fold cross-validation (CV). Using 5-fold CV, we will select the hyperparameters that lead to the `best' mean performance across all 5 folds.
+
+\begin{enumerate}
+
+\item \itemworth{6} The result of a hyperparameter selection often depends upon the choice of performance measure. Here, we will consider the following performance measures: \textbf{accuracy}, \textbf{F1-Score}, \textbf{AUROC}, \textbf{precision}, \textbf{sensitivity} (i.e. recall), and \textbf{specificity}.
+\footnote{Read menu \href{http://scikit-learn.org/stable/modules/model_evaluation.html#roc-metrics}{link} to understand the meaning of these evaluation metrics.}
+
+Implement \verb|performance(...)|. All measures except specificity are implemented in \verb|sklearn.metrics| library. You can use \verb|sklearn.metrics.confusion_matrix(...)| to calculate specificity. Include a screenshot of your code in the writeup.
+\vspace{3cm}
+
+\item \itemworth{4} Next, implement \verb|cv_performance(...)| to return the mean $k$-fold CV performance for the performance metric passed into the function. Here, you will make use of \verb|LinearSVC.fit(X,y)| and \verb|LinearSVC.decision_function(X)|, as well as your \verb|performance(...)| function.
+
+You may have noticed that the proportion of the two classes (positive and negative) are not equal in the training data. When dividing the data into folds for CV, you should try to keep the class proportions roughly the same across folds. In your write-up, briefly describe why it might be beneficial to maintain class proportions across folds. Then, in \verb|main(...)|, use \verb|sklearn.model_selection.StratifiedKFold(...)| to split the data for $5$-fold CV, making sure to stratify using only the training labels.
+\vspace{3cm}
+
+\item \itemworth{12} Now, implement \verb|select_param_linear(...)| to choose a setting for $C$ for a linear SVM based on the training data and the specified metric. Your function should call \verb|cv_performance(...)|, passing in instances of \verb|LinearSVC(loss=`hinge', random_state=0, C=c)| with different values for \verb|C|, e.g., $C = 10^{-3}, 10^{-2}, \ldots, 10^{2}$. Include a screenshot of your code for the \verb|select_param_linear(...)| function in the writeup. Using the training data and the functions implemented here, find the best setting for $C$ for each performance measure mentioned above. Report the best $C$ for each performance measure.
+\vspace{9cm}
+
+\end{enumerate}
+
+
+\section{Test Set Performance \problemworth{10}}\label{sec:test}
+In this section, you will apply the linear SVM classifiers learned in the previous section to the test data. Once you have predicted labels for the test data, you will measure performance.
+
+\begin{enumerate}
+\item \itemworth{4}
+In \verb|main(...)|, using the full training set and \verb|LinearSVC.fit(...)|, train a linear SVM for each performance metric with your best settings of $C$ (use the best setting for each metric; train a total of 6 linear SVMs, each with its own setting of $C$) and the initialization settings \verb|loss=`hinge'| and \verb|random_state=0|. Include a screenshot of your code in the writeup.
+\vspace{3cm}
+
+\item \itemworth{6} Implement \verb|performance_test(...)| which returns the value of a performance measure, given the test data and a trained classifier. Then, for each performance metric, use \verb|performance_test(...)| and the corresponding trained linear-SVM classifier to measure performance on the test data. Include a screenshot of your code for the \verb|performance_test(...)| function in the writeup and report the results. Be sure to include the name of the performance metric employed, and the performance on the test data.
+\vspace{9cm}
+
+\end{enumerate}
+
+\newpage
+\exercise[Random Forest versus Decision Tree \problemworth{6}]
+In this exercise, we will compare Decision Tree (DT) to Random Forest, i.e., ensemble of different DTs on different features. We will explore the effect of two hyper parameters on ensemble performance: i) the number of samples in bootstrap sampling; 2) the maximum number of features to consider for every split when training each DT.
+
+\section*{Starter Files}
+\vspace{-\baselineskip}
+\rule{\textwidth}{1pt}
+Code and Data
+\begin{itemize}[nolistsep]
+    \item \verb|HW3_release.ipynb|. Notebook for the assignment.
+    \item \verb|titanic_train.csv|. Toy dataset.
+\end{itemize}
+Documentation
+\begin{itemize}[nolistsep]
+\item DecisionTreeClassifier: \\{\footnotesize \url{https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html}}
+\item RandomForestClassifier: \\{\footnotesize \url{https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html}}
+\item Accuracy: {\footnotesize \url{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html}}
+\end{itemize}
+\vspace{-\baselineskip}
+\rule{\textwidth}{1pt}
+
+\begin{enumerate}
+    \item \itemworth{2} Implement the DT algorithm using sklearn.tree.DecisionTreeClassifier with \verb|criterion| set to `entropy' and \verb|random_state| set to 0. Train and report the training error on the whole dataset. Then use the \verb|error(...)| function provided to report test error. Include the screenshot of your code.
+    \vspace{4cm}
+    
+    \item \itemworth{2} Implement a random forest using sklearn.ensemble.RandomForestClassifier with \verb|criterion| set to `entropy' and \verb|random_state| set to 0. Adjust the maximum number of samples among 10\%, 20\%, ..., 80\% of the whole data (set \verb|max_samples|), and report, using the \verb|error(...)| function, the training and test error for the best setting and the corresponding choice of hyperparameter. Include the screenshot of your code.
+    \vspace{4cm}
+    
+    \item \itemworth{2} Implement a random forest with \verb|criterion| set to `entropy' and \verb|random_state| set to 0 and adjust the maximum number of features among 1, 2, ..., 7 (set \verb|max_features|) and report, using the \verb|error(...)| function, the training and test error for the best setting and the corresponding choice of hyperparameter. For the maximum number of samples, use the one that performed the best in Part b. Include the screenshot of your code.
+    
+\end{enumerate}
+
+\end{document}

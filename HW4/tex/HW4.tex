@@ -1,0 +1,114 @@
+\documentclass[11pt]{article}
+%\usepackage[utf8]{inputenc}
+
+\usepackage{UCLAhandout_aditya}
+\usepackage{course}
+\input{macros}
+
+\usepackage{color,amssymb,stmaryrd,amsmath,amsfonts,rotating,mathrsfs,psfrag}
+\usepackage{listings}
+
+\newcommand{\ag}[1]{\textcolor{red}{[AG: #1]}}
+
+\begin{document}
+
+\solntrue
+
+\handout{23th May 2023}{\Large Homework 4 \\ \small Due 6th June 2023, Tuesday, before 11:59 pm}
+ 
+\newif\ifaditya
+\adityatrue
+
+\vspace{-0.5in}
+\newtheorem{lemma}{Lemma}[section]
+
+\exercise[Weighted PCA \problemworth{5}]
+ Let $\vct{x}^{(1)},\ldots, \vct{x}^{(n)}$ be $n$ vectors in $\mathbb{R}^d$. We want to map these vectors into a lower dimensional space $\mathbb{R}^m$ where $m < d$, and then be able to recover the vectors from their lower dimensional representation. PCA finds matrices $W\in\mathbb{R}^{m\times d}$ and $U\in\mathbb{R}^{d\times m}$ such that $W$ maps $\vct{x}^{(i)}$ into a lower dimensional space; i.e., $\vct{y}^{(i)} = W\vct{x}^{(i)}$. And $U$ tries to recover $\vct{x}^{(i)}$ from $\vct{y}^{(i)}$; i.e., $\tilde{\vct{x}}^{(i)} = U\vct{y}^{(i)} = UW\vct{x}^{(i)}$. In PCA, we want to solve: 
+ \begin{equation}
+ \label{eq: pca}
+     \min_{W\in\mathbb{R}^{m\times d}, U\in\mathbb{R}^{d\times m}} \sum_{i=1}^{n} \left\lVert  \vct{x}^{(i)} - UW\vct{x}^{(i)}\right\rVert_2^2.
+ \end{equation}
+As shown in the class, the solution for this problem is given by the following lemmas:
+\begin{lemma}
+The problem \eqref{eq: pca} can be recast as: 
+\begin{equation}
+    \min_{ U\in\mathbb{R}^{d\times m}, U^TU = I_m} \sum_{i=1}^{n} \left\lVert  \vct{x}^{(i)} - UU^T\vct{x}^{(i)}\right\rVert_2^2.
+\end{equation}
+In other words, the solution for this problem is to find a $W = U^T$ for some $U$ such that $U^TU = I_m$.
+\end{lemma}
+ 
+\paragraph{Weighted PCA} Now, suppose we change the objective function of PCA to:
+\[
+\mathop{\text{min}}_{W\in\mathbb{R}^{m\times d}, U\in\mathbb{R}^{d\times m}}\sum^n_{i=1}\gamma_i\|\mathbf{x}^{(i)}-\widetilde{\mathbf{x}}^{(i)}\|^2_2
+\]
+where $\gamma_i>0$ and $\tilde{\vct{x}}^{(i)} = UW\vct{x}^{(i)}$, $\forall i$. 
+Prove that the objective function can be recast as
+  \[
+     \mathop{\text{min}}_{U\in\mathbb{R}^{d\times m}, U^TU = I_{m}}\sum^n_{i=1}\gamma_i \|\mathbf{x}^{(i)}-UU^T{\mathbf{x}^{(i)}}\|^2_2.
+\]
+[\textbf{Hint:} You can directly use Lemma 1 (without proof) as a subroutine in your overall proof].
+
+\newpage \
+ \vspace{5cm} \
+\exercise[A Two-Layer Neural Network for Binary Classification \problemworth{12}]
+In this exercise, we will walk through the forward and backward propagation process for a two-layer fully connected neural network. We will use the same data as in Homework 1, the MNIST dataset. The data you will be using is under the \verb|MNIST| folder.
+
+\begin{enumerate}
+    \item \itemworth{0} Load and visualize the data by running the cells for Part (a) in the notebook.   
+    
+    \item \itemworth{2} Implement the forward pass of the two-layer feed forward neural network with a ReLU non-linear layer. Specifically, implement code of ``part (b)'' to compute \verb|scores| in the \verb|loss()| function, take a screenshot of your code and paste it here. Further information and guidance are provided in the comments of the code.\\
+    (\emph{Hint}: Our network has four set of parameters to be updated: First layer weights, first layer biases, second layer weights, and second layer biases. The weights and bias parameters are initialized in the \verb|__init__()| function of the \verb|TwoLayerNet| class.)
+    \vspace{4cm}
+    
+    \item \itemworth{1} What is the formula for calculating $\ell_2$ regularization? Write it down here. Implement the $\ell_2$ regularization term in ``part (c)'', take a screenshot of your code and paste it here. \\
+    \vspace{4cm}
+    
+    \item \itemworth{2} Recall that we can express the final hypothesis for a binary classifier using sigmoid (only 1 output unit) or softmax (2 output units). Implement the softmax cross entropy loss and the gradient w.r.t the inputs in the function \verb|softmax_loss(x,y)|, take a screenshot of your code and paste it here.\\
+    Suppose your softmax cross entropy loss function takes $\boldsymbol{X}$ and  $\boldsymbol{Y}$ as inputs. Specifically, input $\boldsymbol{X}$ is the output score after the second layer, where $x^{(i)}_j$ is the output score of sample $i$ being in class $j$; input $\boldsymbol{Y}$ is the target label represented as one-hot vectors, where $y^{(i)}\in\mathbb{R}^C$ is the one-hot encoded label of sample $i$, e.g, for binary classification,  $y^{(i)} = \left[0, 1\right]$ or $y^{(i)} = \left[1, 0\right]$. What is the formula for calculating the softmax cross-entropy loss and gradient? Write it down here. You can write your formula using $x^{(i)}_j$ and $y^{(i)}_j$.\\
+    \vspace{4cm}
+
+    \item \itemworth{3} Implement the back-propagation process by completing the gradient computation for W2 and b2 in ``part (e)'', take a screenshot of your code and paste it here. What is the formula for calculating the gradient of W2 and b2? Write it down here.\\
+    \vspace{4cm}
+
+    \item \itemworth{4} Implement the prediction function in ``part (f)'' and check the correctness of your implementation above by running the predictions on validation and test sets. Adjust the learning rate in $10^{-5}, 10^{-4}, 10^{-3}, 5\times10^{-3}, 10^{-1}$. Report the best accuracy you get and the corresponding learning rate. Briefly discuss your observations of using different learning rates.\\
+    \vspace{4cm}
+
+\end{enumerate}
+
+
+
+\exercise[K-Means Clustering \problemworth{15}]
+
+In this problem, we shall apply K-Means Algorithm to a popular visual classification dataset CIFAR-10 \footnote{\url{https://www.cs.toronto.edu/~kriz/cifar.html}}. CIFAR-10 dataset consists of 60K labeled 32 x 32 colored images i.e., each image would have 3 channels corresponding to RGB colors.
+Out of the total 60K images, 50K images belong to the training set and 10K belong to the testing set. Within the scope of this problem, we shall work with the testing set only for computational efficiency purposes. Additionally, as K-Means is an unsupervised learning algorithm, we shall discard the labels associated with the images.
+
+Please find the code skeleton for this problem in \verb|Sp23-CS146-HW4.ipynb| notebook shared with you as a part of this HW.
+
+\subsection*{A Implementing K-Means}
+ Rather than training K-Means from scratch, we are going to make use of a pre-existing implementation available in scikit-learn.\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html}}
+
+\begin{enumerate}
+\item \itemworth{5} Make use of the \verb|dataloader()| function to load the data in our notebook. Within this function, the data is loaded using \verb|datasets| package in Tensorflow. \footnote{\url{https://www.tensorflow.org/datasets/catalog/cifar10#:~:text=The\%20CIFAR\%2D10\%20dataset\%20consists,images\%20and\%2010000\%20test\%20images.\&text=Versions\%3A,3.0.}} \textbf{Tip}: Run this notebook in Google Colab as it saves you a lot of time spent in installing Tensorflow.
+
+This function will return 10K testing images of CIFAR-10 dataset along with their ground truth label. We provide \verb|visualize(X, ind)| function to visualize index \verb|ind| in the data \verb|X|. Before using K-Means algorithm, we need to make that the data is as 10000 N-dimensional vector instead of (10000, 32, 32, 3) tensor. Your first task would be to implement \verb|reshape| function that will convert the tensor form of the input to a 2D matrix of the form 10000 x N where N = 32 x 32 x 3. Take a screenshot of your code and paste it here. \hfill 
+\vspace{4cm}
+
+\item \itemworth{5} Once you have reshaped your input, you are ready to apply K-Means algorithm to your data. Note that the number of cluster centers K is a hyperparameter. As we are in the unsupervised regime, we do not have access to any labeled validation set that could be used to decide the best for K. Thus, we use some pre-defined metrics to decide what choice of K should be the best. In this HW, we are going to use the \textit{Sum of squared distances of samples to their closest cluster center} as our score metric. However, we are also aware that K-Means algorithm can lead to different convergence based on the initialization of the clusters. To account for the differences between the score due to various initializations, we apply the algorithm across 3 random seeds (\verb|random_state| in the code). Here, your task is to write a few lines of code to fit the K-Means algorithm and calculate the score metric for all three runs, take a screenshot of your code and paste it here. Finally, submit the results graph you get after running the plotting block in the notebook that takes in your calculated scores as the input.\hfill 
+\vspace{5cm}
+\end{enumerate}
+
+\subsection*{B Visualization} \itemworth{5}
+Another aspect of applying K-Means algorithm involves visualizing the cluster assignments. As described above, the CIFAR-10 data is 3092 dimensional (32 x 32 x 3) which is quite impossible to visualize for us. However, we can project our high dimensional input data into lower dimensional space using PCA algorithm discussed in the class. Once you have the PCA output of the data, we can visualize the transformed low dimensional data easily.
+
+We provide a simple implementation of PCA using its support in \verb|sklearn.decomposition|. To get some sense of how PCA can be beneficial in plotting the high dimensional data, we provide a code block that provides you the PCA of the input data along with its ground truth labels. Running that block should output a plot which looks like Figure \ref{fig:my_label}. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{figs/pca-cifar10.png}
+    \caption{PCA of CIFAR-10 test data in 2-D with ground truth labels.}
+    \label{fig:my_label}
+\end{figure}
+
+Your task is to first apply K-means algorithm with K = 10 and \verb|random_state = 42| to the input data, and get the predicted label assignments to each data sample. Careful inspection of the K-Means documentation should help you to get the predicted labels in one-line of code. Using these predicted labels, implement a code to get a scatter plot of the low-dimensional PCA data with these new assignments. Take a screenshot of your code and paste it here. Submit the final graph you get for this part. \hfill
+
+\end{document}
